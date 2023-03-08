@@ -1,0 +1,36 @@
+﻿<MatCard>
+    <MatCardHeader>
+        <MatCardTitle>@Date?.ToString("MM/dd")</MatCardTitle>
+    </MatCardHeader>
+    <MatCardContent>
+        @if (Data is not null)
+        {
+            <MatTable class="table" Items="Data">
+                <MatTableHeader>
+                    <th>Hour</th>
+                    <th>Temp. (F)</th>
+                </MatTableHeader>
+                <MatTableRow>
+                    <td>@context.Hour</td>
+                    <td>@context.Temperature</td>
+                </MatTableRow>
+            </MatTable>
+        }
+        else
+        {
+            <div>
+                <MatError>Broke</MatError>
+            </div>
+        }
+    </MatCardContent>
+</MatCard>
+
+@code {
+    [Parameter]
+    public IEnumerable<WeatherForecastTableEntity>? Data { get; set; }
+
+    [Parameter]
+    public DateTime? Date { get; set; }
+
+    public record WeatherForecastTableEntity(int Hour, float Temperature);
+}

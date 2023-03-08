@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "WeatherForecastExample.Grpc";
+
+service WeatherForecast {
+  rpc GetForecasts(WeatherForecastSearch) returns (WeatherForecastResponse);
+}
+
+message WeatherForecastSearch {
+  string search = 1;
+}
+
+message WeatherForecastResponse {
+  oneof Result {
+    WeatherForecastSuccess success = 1;
+    WeatherForecastError error = 2;
+  }
+}
+
+message WeatherForecastSuccess {
+  string Name = 1;
+  string Country = 2;
+  string TimeZone = 3;
+  repeated WeatherForecastData Data = 4;
+  string TimeUnit = 5;
+  string TemperatureUnit = 6;
+}
+
+message WeatherForecastData {
+  string Date = 1;
+  repeated float Temperatures = 2;
+}
+
+message WeatherForecastError {
+  string UserSafeErrorMessage = 1;
+}

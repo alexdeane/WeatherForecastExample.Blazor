@@ -1,0 +1,76 @@
+﻿@page "/"
+@using OneOf
+@using WeatherForecastExample.Blazor.Client.ClientWrappers
+@using WeatherForecastExample.Blazor.Client.Models
+@inject IWeatherForecastClientWrapper Client
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <p style="color: red">@_errorMessage</p>
+}
+
+@if (_tableDataWrappers is not null)
+{
+    foreach (var dataSourceWrapper in _tableDataWrappers)
+    {
+        <Table Data="dataSourceWrapper.TableData" Date="dataSourceWrapper.Date"></Table>
+    }
+}
+
+@if (_isLoading)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private IEnumerable<TableDataWrapper>? _tableDataWrappers;
+    private string? _errorMessage;
+    private bool _isLoading;
+
+    public record TableDataWrapper(
+        IEnumerable<Table.WeatherForecastTableEntity>? TableData,
+        DateTime? Date);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var search = "food";
+        var result = await GetData(search);
+
+        result.Switch(success =>
+        {
+            _tableDataWrappers = MapData(success);
+            _errorMessage = null;
+        }, error =>
+        {
+            _errorMessage = error.UserSafeErrorMessage;
+        });
+    }
+
+    private Task<OneOf<WeatherForecastDto, ErrorDto>> GetData(string search)
+    {
+        _isLoading = true;
+
+        return Client.GetForecasts(search, _cts.Token)
+            .ContinueWith(getTask =>
+            {
+                _isLoading = false;
+                return getTask;
+            }).Unwrap();
+    }
+
+    private static IEnumerable<TableDataWrapper>? MapData(WeatherForecastDto dto)
+    {
+        return dto.Data?.Select(x => new TableDataWrapper(
+            TableData: x.Temperatures?.Select((t, i) => new Table.WeatherForecastTableEntity(i, t)),
+            Date: x.Date
+            ));
+    }
+
+}
