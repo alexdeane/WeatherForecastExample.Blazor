@@ -1,4 +1,6 @@
-﻿<MudCard Class="weather-card">
+﻿@using FluentValidation
+@using System.Globalization
+<MudCard Class="weather-card">
     <MudCardHeader>
         <MudText>@Date?.ToString("MM/dd")</MudText>
     </MudCardHeader>
@@ -9,7 +11,7 @@
                 <MudTh>Temp. (F)</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Hour" Class="hour">@context.Hour</MudTd>
+                <MudTd DataLabel="Hour" Class="hour">@context.TimeString()</MudTd>
                 <MudTd DataLabel="Temperature">@context.Temperature</MudTd>
             </RowTemplate>
         </MudTable>
@@ -17,7 +19,6 @@
 </MudCard>
 
 @code {
-
     [Parameter]
     public IEnumerable<WeatherForecastTableEntity>? Data { get; set; }
 
@@ -27,6 +28,12 @@
     [Parameter]
     public bool IsLoading { get; set; }
 
-    public record WeatherForecastTableEntity(int Hour, float Temperature);
-
+    public record WeatherForecastTableEntity(int Hour, float Temperature)
+    {
+        public string TimeString()
+        {
+            return new TimeSpan(Hour, 0, 0)
+                .ToString(@"hh\:mm\:ss", CultureInfo.CurrentUICulture);
+        }
+    }
 }

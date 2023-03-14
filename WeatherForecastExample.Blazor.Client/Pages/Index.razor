@@ -8,16 +8,17 @@
 
 <h1>Weather forecast</h1>
 
-@if (!string.IsNullOrWhiteSpace(_errorMessage))
-{
-    <p style="color: red">@_errorMessage</p>
-}
-
-
 <MudGrid class="grid" Spacing="@GridSpacing" Justify="Justify.Center">
     <MudItem xs="12">
         <SearchForm SearchPerformed="OnSearch"></SearchForm>
     </MudItem>
+    
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <MudItem xs="12">
+            <p style="color: red">@_errorMessage</p>
+        </MudItem>
+    }
 
     @if (_tableDataWrappers is not null)
     {
