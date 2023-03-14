@@ -1,36 +1,32 @@
-﻿<MatCard>
-    <MatCardHeader>
-        <MatCardTitle>@Date?.ToString("MM/dd")</MatCardTitle>
-    </MatCardHeader>
-    <MatCardContent>
-        @if (Data is not null)
-        {
-            <MatTable class="table" Items="Data">
-                <MatTableHeader>
-                    <th>Hour</th>
-                    <th>Temp. (F)</th>
-                </MatTableHeader>
-                <MatTableRow>
-                    <td>@context.Hour</td>
-                    <td>@context.Temperature</td>
-                </MatTableRow>
-            </MatTable>
-        }
-        else
-        {
-            <div>
-                <MatError>Broke</MatError>
-            </div>
-        }
-    </MatCardContent>
-</MatCard>
+﻿<MudCard Class="weather-card">
+    <MudCardHeader>
+        <MudText>@Date?.ToString("MM/dd")</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudTable Items="@Data" Hover="true" Breakpoint="@Breakpoint.Sm" Loading="@IsLoading" LoadingProgressColor="@Color.Info">
+            <HeaderContent>
+                <MudTh>Hour</MudTh>
+                <MudTh>Temp. (F)</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Hour" Class="hour">@context.Hour</MudTd>
+                <MudTd DataLabel="Temperature">@context.Temperature</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudCardContent>
+</MudCard>
 
 @code {
+
     [Parameter]
     public IEnumerable<WeatherForecastTableEntity>? Data { get; set; }
 
     [Parameter]
     public DateTime? Date { get; set; }
 
+    [Parameter]
+    public bool IsLoading { get; set; }
+
     public record WeatherForecastTableEntity(int Hour, float Temperature);
+
 }

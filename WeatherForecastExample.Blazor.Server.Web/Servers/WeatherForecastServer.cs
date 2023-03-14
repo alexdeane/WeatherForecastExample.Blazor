@@ -19,6 +19,7 @@ public class WeatherForecastServer : WeatherForecast.WeatherForecastBase
         var result = await _weatherForecastService.GetForecasts(request.Search, context.CancellationToken);
         var response = new WeatherForecastResponse();
 
+        // TODO: Better to use RpcExceptions to convey error state
         result.Switch(success =>
         {
             response.Success = success;

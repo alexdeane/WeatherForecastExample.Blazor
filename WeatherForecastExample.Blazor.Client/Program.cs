@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using WeatherForecastExample.Blazor.Client;
-using MatBlazor;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -12,6 +12,6 @@ var baseAddress = new Uri("https://localhost:5001/");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = baseAddress });
 builder.Services.AddWeatherForecastClient(baseAddress);
-builder.Services.AddMatBlazor();
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();

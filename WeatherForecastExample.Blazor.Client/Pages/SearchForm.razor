@@ -1,0 +1,62 @@
+﻿@using System.ComponentModel.DataAnnotations
+<MudPaper Class="pa-4">
+    <MudForm @ref="_mudForm" Model="_formModel" @bind-IsValid="@_success">
+        <div>
+            <div Class="search-input">
+                <MudTextField
+                    @bind-Value="_formModel.Search"
+                    For="@(() => _formModel.Search)"
+                    T="string"
+                    Label="Country name"
+                    Style="max-width: 20%;"/>
+                <MudButton
+                    ButtonType="ButtonType.Button" Variant="Variant.Filled"
+                    Color="Color.Primary"
+                    Class="ml-auto search-button"
+                    DisableElevation="true"
+                    OnClick="OnSearch"
+                    Disabled="!_success || _isLoading"
+                    Style="margin-top:15px;"
+                >
+                    Search
+                </MudButton>
+                @if (_isLoading)
+                {
+                    <i>Searching...</i>
+                }
+            </div>
+        </div>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private MudForm _mudForm;
+    private SearchInput _formModel = new();
+    private bool _success;
+
+    [Parameter]
+    public EventCallback<SearchInput> SearchPerformed { get; set; }
+
+    private bool _isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnSearch()
+    {
+        if (!_success) return;
+
+        _isLoading = true;
+        await SearchPerformed.InvokeAsync(_formModel);
+        _isLoading = false;
+    }
+
+    public record SearchInput
+    {
+        [Required]
+        [StringLength(30, ErrorMessage = "Search must be at least 3 characters", MinimumLength = 3)]
+        public string Search { get; set; } = string.Empty;
+    }
+}

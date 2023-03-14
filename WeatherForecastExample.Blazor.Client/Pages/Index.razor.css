@@ -1,0 +1,39 @@
+.weather-card {
+    display: inline-block;
+    width: 20%;
+    margin: 5px;
+}
+
+.submit-btn {
+    float: right;
+}
+
+.search-input {
+    height: 50%;
+}
+
+.mud-grid-item {
+    width: 20% !important;
+}
+
+.flex-row-custom {
+    flex-flow: row wrap;
+    box-sizing: border-box;
+    display: flex;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.search-content {
+    margin-top: 10px;
+}
+
+.table td, .table th {
+    font-size: 10px;
+}
+
+.hour {
+    background-color: darkslategrey;
+    color: #0dcaf0;
+    font-family: Consolas, serif
+}
